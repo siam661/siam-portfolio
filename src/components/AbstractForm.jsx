@@ -5,41 +5,43 @@ function InteractiveWireframe({ reducedMotion }) {
   const groupRef = useRef(null);
   const stateRef = useRef({
     velocity: { x: 0, y: 0 },
+    currentRotation: { x: 0, y: 0 },
     isDragging: false,
     lastPos: { x: 0, y: 0 },
     canvas: null,
   });
 
-  // Auto-rotation when idle
   useFrame((_, delta) => {
     if (reducedMotion || !groupRef.current) return;
     const s = stateRef.current;
+    const dt = Math.min(delta, 0.05); // Clamp delta for stability
 
     if (!s.isDragging) {
-      // Friction — buttery smooth deceleration
-      s.velocity.x *= 0.95;
-      s.velocity.y *= 0.95;
+      // Buttery smooth deceleration — lower friction = longer slide
+      const friction = 0.965;
+      s.velocity.x *= friction;
+      s.velocity.y *= friction;
 
       // Subtle auto-rotation when idle
-      s.velocity.x += 0.003 * delta;
-      s.velocity.y += 0.008 * delta;
-
-      groupRef.current.rotation.x += s.velocity.x;
-      groupRef.current.rotation.y += s.velocity.y;
+      if (Math.abs(s.velocity.x) < 0.0005 && Math.abs(s.velocity.y) < 0.0005) {
+        s.velocity.x += 0.002 * dt;
+        s.velocity.y += 0.006 * dt;
+      }
     }
+
+    groupRef.current.rotation.x += s.velocity.x * dt * 60;
+    groupRef.current.rotation.y += s.velocity.y * dt * 60;
   });
 
-  // Setup canvas events via useFrame (runs after mount)
   useFrame(({ gl }) => {
     const s = stateRef.current;
     if (s.canvas) return;
     s.canvas = gl.domElement;
     const canvas = s.canvas;
-
     canvas.style.cursor = 'grab';
     canvas.style.touchAction = 'none';
 
-    // Mouse events
+    // Mouse
     canvas.addEventListener('pointerdown', (e) => {
       s.isDragging = true;
       s.lastPos = { x: e.clientX, y: e.clientY };
@@ -52,21 +54,19 @@ function InteractiveWireframe({ reducedMotion }) {
       const dy = e.clientY - s.lastPos.y;
       const dx = e.clientX - s.lastPos.x;
       s.lastPos = { x: e.clientX, y: e.clientY };
-      s.velocity = { x: dy * 0.005, y: dx * 0.005 };
-      if (groupRef.current) {
-        groupRef.current.rotation.x += s.velocity.x;
-        groupRef.current.rotation.y += s.velocity.y;
-      }
+      // Softer sensitivity for smoother feel
+      s.velocity.x += dy * 0.003;
+      s.velocity.y += dx * 0.003;
+      // Clamp max velocity
+      s.velocity.x = Math.max(-0.15, Math.min(0.15, s.velocity.x));
+      s.velocity.y = Math.max(-0.15, Math.min(0.15, s.velocity.y));
     });
 
-    const stopDrag = () => {
-      s.isDragging = false;
-      canvas.style.cursor = 'grab';
-    };
+    const stopDrag = () => { s.isDragging = false; canvas.style.cursor = 'grab'; };
     canvas.addEventListener('pointerup', stopDrag);
     canvas.addEventListener('pointerleave', stopDrag);
 
-    // Touch events
+    // Touch — optimized for mobile smoothness
     canvas.addEventListener('touchstart', (e) => {
       if (e.touches.length === 1) {
         s.isDragging = true;
@@ -81,11 +81,11 @@ function InteractiveWireframe({ reducedMotion }) {
       const dy = e.touches[0].clientY - s.lastPos.y;
       const dx = e.touches[0].clientX - s.lastPos.x;
       s.lastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      s.velocity = { x: dy * 0.005, y: dx * 0.005 };
-      if (groupRef.current) {
-        groupRef.current.rotation.x += s.velocity.x;
-        groupRef.current.rotation.y += s.velocity.y;
-      }
+      // Softer touch sensitivity for buttery feel
+      s.velocity.x += dy * 0.0025;
+      s.velocity.y += dx * 0.0025;
+      s.velocity.x = Math.max(-0.12, Math.min(0.12, s.velocity.x));
+      s.velocity.y = Math.max(-0.12, Math.min(0.12, s.velocity.y));
     }, { passive: false });
 
     canvas.addEventListener('touchend', () => { s.isDragging = false; });

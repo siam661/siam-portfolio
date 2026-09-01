@@ -94,8 +94,7 @@ button { font-family: inherit; background: none; border: none; color: inherit; c
 }
 
 /* ── Cursor: precise, glowing ── */
-.has-cursor { cursor: none; }
-.has-cursor a, .has-cursor button { cursor: none; }
+.has-cursor, .has-cursor * { cursor: none !important; }
 
 .cursor-dot {
   position: fixed;

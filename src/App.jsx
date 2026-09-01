@@ -10,13 +10,10 @@ import ChapterWork from './sections/ChapterWork';
 import ChapterDetails from './sections/ChapterDetails';
 import FinalContact from './sections/FinalContact';
 import { useReducedMotion } from './hooks/useReducedMotion';
-import { useIsTouchDevice } from './hooks/useIsTouchDevice';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 
 export default function App() {
   const reducedMotion = useReducedMotion();
-  const isTouch = useIsTouchDevice();
-
   useSmoothScroll(reducedMotion);
 
   useEffect(() => {
@@ -27,7 +24,7 @@ export default function App() {
     <div className="bg-bg text-ink font-body">
       <Particles />
       <Grain />
-      <CustomCursor enabled={!isTouch} />
+      <CustomCursor enabled={true} />
       <Nav />
 
       <main>

@@ -1,53 +1,96 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 export default function CustomCursor({ enabled }) {
   const dotRef = useRef(null);
   const ringRef = useRef(null);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!enabled) return undefined;
-
-    document.documentElement.classList.add("has-cursor");
-
     const dot = dotRef.current;
     const ring = ringRef.current;
-    const ringPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    if (!dot || !ring) return;
 
-    const quickDotX = gsap.quickTo(dot, "x", { duration: 0.05, ease: "none" });
-    const quickDotY = gsap.quickTo(dot, "y", { duration: 0.05, ease: "none" });
-    const quickRingX = gsap.quickTo(ring, "x", { duration: 0.35, ease: "power3.out" });
-    const quickRingY = gsap.quickTo(ring, "y", { duration: 0.35, ease: "power3.out" });
-
-    const handleMove = (e) => {
-      quickDotX(e.clientX);
-      quickDotY(e.clientY);
-      quickRingX(e.clientX);
-      quickRingY(e.clientY);
-      ringPos.x = e.clientX;
-      ringPos.y = e.clientY;
+    // Desktop mouse
+    const handleMouseMove = (e) => {
+      setVisible(true);
+      gsap.quickTo(dot, "x", { duration: 0.05, ease: "none" })(e.clientX);
+      gsap.quickTo(dot, "y", { duration: 0.05, ease: "none" })(e.clientY);
+      gsap.quickTo(ring, "x", { duration: 0.35, ease: "power3.out" })(e.clientX);
+      gsap.quickTo(ring, "y", { duration: 0.35, ease: "power3.out" })(e.clientY);
     };
 
-    const handleOver = (e) => {
+    const handleMouseOver = (e) => {
       if (e.target.closest("a, button, [data-cursor-hover]")) {
         ring.classList.add("is-active");
       }
     };
-    const handleOut = (e) => {
+    const handleMouseOut = (e) => {
       if (e.target.closest("a, button, [data-cursor-hover]")) {
         ring.classList.remove("is-active");
       }
     };
 
-    window.addEventListener("mousemove", handleMove);
-    document.addEventListener("mouseover", handleOver);
-    document.addEventListener("mouseout", handleOut);
+    // Mobile touch
+    let hideTimeout;
+    const handleTouchStart = (e) => {
+      if (e.touches.length === 1) {
+        setVisible(true);
+        clearTimeout(hideTimeout);
+        const touch = e.touches[0];
+        gsap.quickTo(dot, "x", { duration: 0.05, ease: "none" })(touch.clientX);
+        gsap.quickTo(dot, "y", { duration: 0.05, ease: "none" })(touch.clientY);
+        gsap.quickTo(ring, "x", { duration: 0.2, ease: "power2.out" })(touch.clientX);
+        gsap.quickTo(ring, "y", { duration: 0.2, ease: "power2.out" })(touch.clientY);
+
+        // Check if touching interactive element
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (target?.closest("a, button, [data-cursor-hover]")) {
+          ring.classList.add("is-active");
+        }
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (e.touches.length === 1) {
+        const touch = e.touches[0];
+        gsap.quickTo(dot, "x", { duration: 0.05, ease: "none" })(touch.clientX);
+        gsap.quickTo(dot, "y", { duration: 0.05, ease: "none" })(touch.clientY);
+        gsap.quickTo(ring, "x", { duration: 0.15, ease: "power2.out" })(touch.clientX);
+        gsap.quickTo(ring, "y", { duration: 0.15, ease: "power2.out" })(touch.clientY);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      ring.classList.remove("is-active");
+      // Hide cursor after delay
+      hideTimeout = setTimeout(() => setVisible(false), 800);
+    };
+
+    // Add desktop listeners
+    window.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseover", handleMouseOver);
+    document.addEventListener("mouseout", handleMouseOut);
+
+    // Add mobile listeners
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd);
+
+    // Set cursor style
+    if (enabled) {
+      document.documentElement.classList.add("has-cursor");
+    }
 
     return () => {
       document.documentElement.classList.remove("has-cursor");
-      window.removeEventListener("mousemove", handleMove);
-      document.removeEventListener("mouseover", handleOver);
-      document.removeEventListener("mouseout", handleOut);
+      window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseover", handleMouseOver);
+      document.removeEventListener("mouseout", handleMouseOut);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      clearTimeout(hideTimeout);
     };
   }, [enabled]);
 
@@ -55,8 +98,18 @@ export default function CustomCursor({ enabled }) {
 
   return (
     <>
-      <div ref={dotRef} className="cursor-dot" aria-hidden="true" />
-      <div ref={ringRef} className="cursor-ring" aria-hidden="true" />
+      <div
+        ref={dotRef}
+        className="cursor-dot"
+        style={{ opacity: visible ? 1 : 0, transition: "opacity 0.3s ease" }}
+        aria-hidden="true"
+      />
+      <div
+        ref={ringRef}
+        className="cursor-ring"
+        style={{ opacity: visible ? 1 : 0, transition: "opacity 0.3s ease" }}
+        aria-hidden="true"
+      />
     </>
   );
 }
