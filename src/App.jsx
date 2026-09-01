@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Nav from './components/Nav';
 import CustomCursor from './components/CustomCursor';
 import Grain from './components/Grain';
+import Particles from './components/Particles';
 import Intro from './sections/Intro';
 import ChapterBeginning from './sections/ChapterBeginning';
 import ChapterCraft from './sections/ChapterCraft';
@@ -19,11 +20,12 @@ export default function App() {
   useSmoothScroll(reducedMotion);
 
   useEffect(() => {
-    document.documentElement.style.background = '#0d0d10';
+    document.documentElement.style.background = '#08080f';
   }, []);
 
   return (
     <div className="bg-bg text-ink font-body">
+      <Particles />
       <Grain />
       <CustomCursor enabled={!isTouch} />
       <Nav />

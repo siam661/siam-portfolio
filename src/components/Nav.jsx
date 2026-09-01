@@ -12,7 +12,6 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
   const firstLinkRef = useRef(null);
-  const closeBtnRef = useRef(null);
 
   useEffect(() => {
     if (open) {
@@ -20,23 +19,12 @@ export default function Nav() {
       gsap.fromTo(
         menuRef.current,
         { clipPath: 'inset(0% 0% 100% 0%)' },
-        {
-          clipPath: 'inset(0% 0% 0% 0%)',
-          duration: 0.65,
-          ease: 'power4.inOut',
-        },
+        { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.65, ease: 'power4.inOut' },
       );
       gsap.fromTo(
         '.mobile-link',
         { y: 24, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.06,
-          delay: 0.2,
-          ease: 'power3.out',
-        },
+        { y: 0, opacity: 1, duration: 0.5, stagger: 0.06, delay: 0.2, ease: 'power3.out' },
       );
       firstLinkRef.current?.focus();
     } else {
@@ -46,92 +34,53 @@ export default function Nav() {
 
   useEffect(() => {
     if (!open) return undefined;
-    const handleKey = e => {
-      if (e.key === 'Escape') setOpen(false);
-    };
+    const handleKey = e => { if (e.key === 'Escape') setOpen(false); };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [open]);
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-6 md:py-8">
-        <a
-          href="#top"
-          className="font-display text-sm tracking-wide text-ink"
-          data-cursor-hover
-        >
-          Siam
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5 md:py-6">
+        <div className="absolute inset-0 bg-bg/60 backdrop-blur-xl border-b border-line" />
+        <a href="#top" className="relative font-display text-sm tracking-widest uppercase text-cyan" data-cursor-hover>
+          Siam<span className="text-purple">.</span>
         </a>
-
-        <nav className="hidden md:flex items-center gap-9" aria-label="Primary">
+        <nav className="relative hidden md:flex items-center gap-9" aria-label="Primary">
           {LINKS.map(link => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-ink-muted hover:text-ink transition-colors duration-300"
-              data-cursor-hover
-            >
+            <a key={link.href} href={link.href}
+              className="text-[13px] text-ink-muted hover:text-cyan transition-colors duration-300 tracking-wide uppercase"
+              data-cursor-hover>
               {link.label}
             </a>
           ))}
         </nav>
-
-        <button
-          type="button"
-          className="md:hidden flex items-center justify-center w-10 h-10 text-ink"
-          onClick={() => setOpen(true)}
-          aria-label="Open menu"
-          aria-expanded={open}
-        >
+        <button type="button" className="relative md:hidden flex items-center justify-center w-10 h-10 text-ink"
+          onClick={() => setOpen(true)} aria-label="Open menu" aria-expanded={open}>
           <Menu size={22} strokeWidth={1.5} />
         </button>
       </header>
 
-      <div
-        ref={menuRef}
-        className="fixed inset-0 z-[70] bg-bg md:hidden flex flex-col"
-        style={{
-          clipPath: 'inset(0% 0% 100% 0%)',
-          visibility: open ? 'visible' : 'hidden',
-        }}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Mobile navigation"
-      >
+      <div ref={menuRef} className="fixed inset-0 z-[70] bg-bg md:hidden flex flex-col"
+        style={{ clipPath: 'inset(0% 0% 100% 0%)', visibility: open ? 'visible' : 'hidden' }}
+        role="dialog" aria-modal="true" aria-label="Mobile navigation">
         <div className="flex items-center justify-between px-6 py-6">
-          <span className="font-display text-sm text-ink">Siam</span>
-          <button
-            ref={closeBtnRef}
-            type="button"
-            className="flex items-center justify-center w-10 h-10 text-ink"
-            onClick={() => setOpen(false)}
-            aria-label="Close menu"
-          >
+          <span className="font-display text-sm tracking-widest uppercase text-cyan">Siam<span className="text-purple">.</span></span>
+          <button type="button" className="flex items-center justify-center w-10 h-10 text-ink"
+            onClick={() => setOpen(false)} aria-label="Close menu">
             <X size={22} strokeWidth={1.5} />
           </button>
         </div>
-
-        <nav
-          className="flex-1 flex flex-col justify-center px-8 gap-2"
-          aria-label="Mobile primary"
-        >
+        <nav className="flex-1 flex flex-col justify-center px-8 gap-2" aria-label="Mobile primary">
           {LINKS.map((link, i) => (
-            <a
-              key={link.href}
-              ref={i === 0 ? firstLinkRef : null}
-              href={link.href}
-              className="mobile-link font-display text-4xl py-3 text-ink"
-              onClick={() => setOpen(false)}
-            >
+            <a key={link.href} ref={i === 0 ? firstLinkRef : null} href={link.href}
+              className="mobile-link font-display text-4xl py-3 text-ink hover:text-cyan transition-colors duration-300"
+              onClick={() => setOpen(false)}>
               {link.label}
             </a>
           ))}
         </nav>
-
-        <p className="px-8 pb-8 text-xs text-ink-faint">
-          mdsiamislam8644@gmail.com
-        </p>
+        <p className="px-8 pb-8 text-xs text-ink-faint">mdsiamislam8644@gmail.com</p>
       </div>
     </>
   );

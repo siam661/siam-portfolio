@@ -1,38 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap');
 @import 'tailwindcss';
 
+/* ══════════════════════════════════════════════
+   WORLD-CLASS FUTURISTIC DESIGN SYSTEM
+   Electric cyan + purple on deep dark
+   ══════════════════════════════════════════════ */
 @theme {
-  --color-bg: #0d0d10;
-  --color-surface: #16161b;
-  --color-ink: #edeae3;
-  --color-ink-muted: #96938c;
-  --color-ink-faint: #5c5a56;
-  --color-accent: #c9a227;
-  --color-accent-dim: #8a6f1e;
-  --color-line: rgba(237, 234, 227, 0.1);
+  --color-bg: #06060e;
+  --color-bg-alt: #0a0a16;
+  --color-surface: #0f0f1c;
+  --color-surface-hover: #161630;
+  --color-ink: #e8eaed;
+  --color-ink-muted: #7a7f8a;
+  --color-ink-faint: #3a3d4a;
+  --color-cyan: #00f0ff;
+  --color-cyan-dim: #00a8b3;
+  --color-purple: #8b5cf6;
+  --color-purple-dim: #6333d1;
+  --color-magenta: #e040fb;
+  --color-line: rgba(232, 234, 237, 0.06);
+  --color-glass: rgba(15, 15, 28, 0.65);
+  --color-glass-border: rgba(232, 234, 237, 0.07);
 
   --font-display: 'Fraunces', ui-serif, Georgia, serif;
   --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
-:root {
-  color-scheme: dark;
-}
-
-* {
-  box-sizing: border-box;
-}
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
 
 html {
   background: var(--color-bg);
-  scrollbar-color: var(--color-accent-dim) var(--color-bg);
+  scrollbar-color: var(--color-purple-dim) var(--color-bg);
 }
 
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top, rgba(201, 162, 39, 0.08), transparent 28%),
-    linear-gradient(180deg, #0d0d10 0%, #0d0d10 100%);
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 240, 255, 0.06), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 60%, rgba(139, 92, 246, 0.04), transparent 70%),
+    radial-gradient(ellipse 40% 30% at 20% 80%, rgba(0, 240, 255, 0.02), transparent 60%),
+    linear-gradient(180deg, #08080f 0%, #06060e 30%, #0a0a18 70%, #06060e 100%);
   color: var(--color-ink);
   font-family: var(--font-body);
   font-weight: 400;
@@ -40,88 +48,63 @@ body {
   overflow-x: hidden;
 }
 
+/* ── Subtle grid + vignette: atmospheric depth ── */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    rgba(237, 234, 227, 0.02),
-    transparent 12%,
-    transparent 88%,
-    rgba(237, 234, 227, 0.02)
-  );
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.01) 1px, transparent 1px);
+  background-size: 80px 80px;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
   z-index: 0;
 }
 
-#root {
-  position: relative;
-  z-index: 1;
-  overflow-x: clip;
-}
+#root { position: relative; z-index: 1; overflow-x: clip; }
+main { position: relative; z-index: 1; }
 
-main {
-  position: relative;
-  z-index: 1;
-}
-
-h1,
-h2,
-h3,
-h4 {
+h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 400;
-  line-height: 1.05;
+  font-weight: 500;
+  line-height: 1.08;
   margin: 0;
 }
+p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; background: none; border: none; color: inherit; cursor: pointer; }
 
-p {
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button {
-  font-family: inherit;
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-}
-
-/* Film-grain texture overlay, extremely subtle */
+/* ── Grain: barely-there film texture ── */
 .grain {
   pointer-events: none;
   position: fixed;
   inset: 0;
   z-index: 60;
-  opacity: 0.035;
+  opacity: 0.022;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Custom cursor -- desktop only, applied via JS toggling .has-cursor on <html> */
-.has-cursor {
-  cursor: none;
-}
-.has-cursor a,
-.has-cursor button {
-  cursor: none;
-}
+/* ── Cursor: precise, glowing ── */
+.has-cursor { cursor: none; }
+.has-cursor a, .has-cursor button { cursor: none; }
 
 .cursor-dot {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  margin: -4px 0 0 -4px;
+  top: 0; left: 0;
+  width: 6px; height: 6px;
+  margin: -3px 0 0 -3px;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: var(--color-cyan);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.2);
   pointer-events: none;
   z-index: 100;
   will-change: transform;
@@ -129,57 +112,81 @@ button {
 
 .cursor-ring {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;
+  top: 0; left: 0;
+  width: 32px; height: 32px;
+  margin: -16px 0 0 -16px;
   border-radius: 50%;
-  border: 1px solid rgba(237, 234, 227, 0.35);
+  border: 1px solid rgba(0, 240, 255, 0.2);
   pointer-events: none;
   z-index: 100;
   will-change: transform;
   transition:
-    width 0.25s ease,
-    height 0.25s ease,
-    margin 0.25s ease,
+    width 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    margin 0.25s cubic-bezier(0.22, 1, 0.36, 1),
     border-color 0.25s ease,
-    background 0.25s ease;
+    background 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .cursor-ring.is-active {
-  width: 60px;
-  height: 60px;
-  margin: -30px 0 0 -30px;
-  border-color: var(--color-accent);
-  background: rgba(201, 162, 39, 0.08);
+  width: 52px; height: 52px;
+  margin: -26px 0 0 -26px;
+  border-color: rgba(0, 240, 255, 0.5);
+  background: rgba(0, 240, 255, 0.04);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.08);
 }
 
-/* Focus visibility -- never sacrificed for aesthetics */
-a:focus-visible,
-button:focus-visible,
-[tabindex]:focus-visible {
-  outline: 1.5px solid var(--color-accent);
+/* ── Focus ── */
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 1.5px solid var(--color-cyan);
   outline-offset: 4px;
   border-radius: 2px;
 }
+::selection { background: var(--color-cyan); color: var(--color-bg); }
 
-::selection {
-  background: var(--color-accent);
-  color: var(--color-bg);
-}
-
+/* ── Utilities ── */
 .eyebrow {
   font-family: var(--font-body);
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
-  color: var(--color-accent);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-cyan), var(--color-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass-card {
+  background: var(--color-glass);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.chapter-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-line) 20%, var(--color-line) 80%, transparent);
+}
+
+/* ── 3D Neon Button ── */
+.neon-btn {
+  position: relative;
+  transform: translateY(0);
+  transition: transform 0.15s ease, box-shadow 0.3s ease;
+}
+.neon-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 currentColor, 0 2px 8px rgba(0,0,0,0.2) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
