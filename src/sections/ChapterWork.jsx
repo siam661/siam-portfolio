@@ -1,9 +1,9 @@
-import { useLayoutEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowUpRight } from "lucide-react";
-import MagneticButton from "../components/MagneticButton";
-import { projects } from "../data/projects";
+import { useLayoutEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowUpRight } from 'lucide-react';
+import MagneticButton from '../components/MagneticButton';
+import { projects } from '../data/projects';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,7 +20,9 @@ function ProjectPreview({ project, index }) {
         <span className="w-2 h-2 rounded-full bg-ink-faint/50" />
         <span className="w-2 h-2 rounded-full bg-ink-faint/50" />
         <span className="w-2 h-2 rounded-full bg-ink-faint/50" />
-        <span className="ml-3 text-[11px] text-ink-faint truncate">{project.url.replace("https://", "")}</span>
+        <span className="ml-3 text-[11px] text-ink-faint truncate">
+          {project.url.replace('https://', '')}
+        </span>
       </div>
       <div className="relative h-[calc(100%-37px)] overflow-hidden bg-gradient-to-br from-surface to-bg">
         {showImage ? (
@@ -48,8 +50,8 @@ export default function ChapterWork({ reducedMotion }) {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.utils.toArray(".project-row").forEach((row) => {
-        const preview = row.querySelector(".project-preview");
+      gsap.utils.toArray('.project-row').forEach(row => {
+        const preview = row.querySelector('.project-preview');
         if (reducedMotion) {
           gsap.set(row, { opacity: 1 });
           return;
@@ -60,8 +62,8 @@ export default function ChapterWork({ reducedMotion }) {
           {
             opacity: 1,
             duration: 0.6,
-            scrollTrigger: { trigger: row, start: "top 85%", once: true },
-          }
+            scrollTrigger: { trigger: row, start: 'top 85%', once: true },
+          },
         );
         gsap.fromTo(
           preview,
@@ -69,9 +71,14 @@ export default function ChapterWork({ reducedMotion }) {
           {
             scale: 1,
             y: 0,
-            ease: "power3.out",
-            scrollTrigger: { trigger: row, start: "top 85%", end: "top 45%", scrub: 0.8 },
-          }
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: row,
+              start: 'top 85%',
+              end: 'top 45%',
+              scrub: 0.8,
+            },
+          },
         );
       });
     }, rootRef);
@@ -79,7 +86,11 @@ export default function ChapterWork({ reducedMotion }) {
   }, [reducedMotion]);
 
   return (
-    <section id="work" ref={rootRef} className="relative py-32 md:py-44 px-6 md:px-10">
+    <section
+      id="work"
+      ref={rootRef}
+      className="relative py-32 md:py-44 px-6 md:px-10"
+    >
       <div className="max-w-6xl mx-auto">
         <p className="eyebrow mb-5">Chapter 03 — The Work</p>
         <h2 className="font-display text-3xl md:text-4xl text-ink leading-tight mb-20 md:mb-28 max-w-lg">
@@ -88,31 +99,39 @@ export default function ChapterWork({ reducedMotion }) {
 
         <div className="flex flex-col gap-28 md:gap-40">
           {projects.map((project, i) => {
-            const indexLabel = String(i + 1).padStart(2, "0");
+            const indexLabel = String(i + 1).padStart(2, '0');
             return (
-            <div
-              key={project.id}
-              className="project-row grid md:grid-cols-12 gap-8 md:gap-10 items-center"
-            >
-              <div className={`md:col-span-7 ${i % 2 === 1 ? "md:order-2" : "md:order-1"}`}>
-                <ProjectPreview project={project} index={indexLabel} />
-              </div>
-              <div className={`md:col-span-5 ${i % 2 === 1 ? "md:order-1" : "md:order-2"}`}>
-                <span className="text-xs text-ink-faint">{indexLabel}</span>
-                <h3 className="font-display text-3xl md:text-4xl text-ink mt-3 mb-4">{project.title}</h3>
-                <p className="text-ink-muted leading-relaxed max-w-sm mb-7">{project.description}</p>
-                <MagneticButton
-                  as="a"
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-ink border border-line rounded-full px-5 py-2.5 hover:border-accent hover:text-accent transition-colors duration-300"
+              <div
+                key={project.id}
+                className="project-row grid md:grid-cols-12 gap-8 md:gap-10 items-center"
+              >
+                <div
+                  className={`md:col-span-7 ${i % 2 === 1 ? 'md:order-2' : 'md:order-1'}`}
                 >
-                  Visit project
-                  <ArrowUpRight size={15} strokeWidth={1.5} />
-                </MagneticButton>
+                  <ProjectPreview project={project} index={indexLabel} />
+                </div>
+                <div
+                  className={`md:col-span-5 ${i % 2 === 1 ? 'md:order-1' : 'md:order-2'}`}
+                >
+                  <span className="text-xs text-ink-faint">{indexLabel}</span>
+                  <h3 className="font-display text-3xl md:text-4xl text-ink mt-3 mb-4">
+                    {project.title}
+                  </h3>
+                  <p className="text-ink-muted leading-relaxed max-w-sm mb-7">
+                    {project.description}
+                  </p>
+                  <MagneticButton
+                    as="a"
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-ink border border-line rounded-full px-5 py-2.5 hover:border-accent hover:text-accent transition-colors duration-300"
+                  >
+                    Visit project
+                    <ArrowUpRight size={15} strokeWidth={1.5} />
+                  </MagneticButton>
+                </div>
               </div>
-            </div>
             );
           })}
         </div>

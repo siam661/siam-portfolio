@@ -1,5 +1,5 @@
-import { Suspense, useEffect, useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 
 function Wireframe({ reducedMotion }) {
   const groupRef = useRef(null);
@@ -14,11 +14,21 @@ function Wireframe({ reducedMotion }) {
     <group ref={groupRef}>
       <mesh>
         <icosahedronGeometry args={[1.6, 1]} />
-        <meshBasicMaterial color="#c9a227" wireframe transparent opacity={0.55} />
+        <meshBasicMaterial
+          color="#c9a227"
+          wireframe
+          transparent
+          opacity={0.55}
+        />
       </mesh>
       <mesh scale={0.62}>
         <icosahedronGeometry args={[1.6, 0]} />
-        <meshBasicMaterial color="#edeae3" wireframe transparent opacity={0.18} />
+        <meshBasicMaterial
+          color="#edeae3"
+          wireframe
+          transparent
+          opacity={0.18}
+        />
       </mesh>
     </group>
   );
@@ -38,8 +48,9 @@ export default function AbstractForm({ reducedMotion }) {
 
   useEffect(() => {
     try {
-      const canvas = document.createElement("canvas");
-      const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+      const canvas = document.createElement('canvas');
+      const gl =
+        canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       if (!gl) setSupportsWebGL(false);
     } catch {
       setSupportsWebGL(false);
@@ -49,16 +60,24 @@ export default function AbstractForm({ reducedMotion }) {
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return undefined;
+
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { rootMargin: "200px 0px" }
+      ([entry]) => {
+        if (entry.isIntersecting !== inView) setInView(entry.isIntersecting);
+      },
+      { rootMargin: '200px 0px' },
     );
+
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [inView]);
 
   return (
-    <div ref={containerRef} className="w-full h-full min-h-[280px]" aria-hidden="true">
+    <div
+      ref={containerRef}
+      className="w-full h-full min-h-[280px]"
+      aria-hidden="true"
+    >
       {supportsWebGL && inView && (
         <Suspense fallback={null}>
           <Canvas

@@ -23,9 +23,12 @@ export default function FinalContact({ reducedMotion }) {
       <div className="max-w-4xl mx-auto text-center">
         <p className="eyebrow contact-reveal mb-6">Final Chapter</p>
         <h2 className="contact-reveal font-display text-4xl md:text-6xl text-ink leading-tight mb-4">
-          Maybe the next story is yours.
+          The story doesn&rsquo;t end here.
         </h2>
-        <p className="contact-reveal font-display italic text-2xl md:text-3xl text-ink-muted mb-14">
+        <p className="contact-reveal font-display italic text-2xl md:text-3xl text-ink-muted mb-4">
+          Maybe the next story is yours.
+        </p>
+        <p className="contact-reveal font-body text-sm md:text-base tracking-[0.18em] text-ink-faint uppercase mb-14">
           Let&rsquo;s build something worth remembering.
         </p>
 

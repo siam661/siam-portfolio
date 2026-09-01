@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export function useReducedMotion() {
-  const [reduced, setReduced] = useState(false);
+  const [reduced, setReduced] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
 
   useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(query.matches);
-    const handler = (e) => setReduced(e.matches);
-    query.addEventListener("change", handler);
-    return () => query.removeEventListener("change", handler);
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handler = e => setReduced(e.matches);
+
+    query.addEventListener('change', handler);
+    return () => query.removeEventListener('change', handler);
   }, []);
 
   return reduced;
